@@ -1,2 +1,2 @@
-import './javascript/main.js';
-import './javascript/requests.js';
+import './javascript/main';
+import './javascript/requests';
