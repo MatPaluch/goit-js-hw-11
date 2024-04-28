@@ -23,7 +23,7 @@ searchForm.addEventListener('submit', ev => {
     .then(result => {
       const arrayOfHits = result.hits;
       arrayOfHits.map(obj => {
-        gallery.innerHTML = `<div class="photo-card"><img src="${obj.webformatURL}" alt="" loading="lazy" />
+        gallery.innerHTML += `<div class="photo-card"><img src="${obj.webformatURL}" alt="" loading="lazy" />
   <div class="info">
     <p class="info-item">
       <b>Likes</b>
