@@ -4,7 +4,7 @@ export async function searchPhrase(text, pageIndex) {
     q: text,
     image_type: 'photo',
     orientation: 'horizontal',
-    safesearch: false,
+    safesearch: true,
     lang: 'pl,en',
     page: pageIndex,
     per_page: 40,
