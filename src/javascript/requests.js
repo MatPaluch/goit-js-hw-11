@@ -5,7 +5,7 @@ export async function searchPhrase(text, pageIndex) {
     image_type: 'photo',
     orientation: 'horizontal',
     safesearch: false,
-    lang: 'pl',
+    lang: 'pl,en',
     page: pageIndex,
     per_page: 40,
   });
