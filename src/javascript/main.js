@@ -34,8 +34,8 @@ searchForm.addEventListener('submit', ev => {
           Notiflix.Notify.success(
             `Hooray! We found ${result.totalHits} images.`
           );
-          arrayOfHits.map(obj => {
-            gallery.innerHTML += `<div class="photo-card">
+          const arrayOfCards = arrayOfHits.map(obj => {
+            return `<div class="photo-card">
           <a href="${obj.largeImageURL}"><img src="${obj.webformatURL}" alt="${obj.tags}" title="User: ${obj.user}" loading="lazy" /></a>
           <div class="info">
             <p class="info-item"><b>Likes</b><span>${obj.likes}</span></p>
@@ -45,6 +45,7 @@ searchForm.addEventListener('submit', ev => {
           </div>
         </div>`;
           });
+          gallery.innerHTML = arrayOfCards.join('');
           loadMore.removeAttribute('hidden');
         }
         var lightbox = new SimpleLightbox('.gallery a', {
@@ -77,10 +78,10 @@ loadMore.addEventListener('click', ev => {
             gallery.innerHTML += `<div class="photo-card">
           <a href="${obj.largeImageURL}"><img src="${obj.webformatURL}" alt="${obj.tags}" title="User:${obj.user}" loading="lazy" /></a>
           <div class="info">
-            <p class="info-item"><b>Likes ${obj.likes}</b></p>
-            <p class="info-item"><b>Views ${obj.views}</b></p>
-            <p class="info-item"><b>Comments ${obj.comments}</b></p>
-            <p class="info-item"><b>Downloads ${obj.downloads}</b></p>
+            <p class="info-item"><b>Likes</b><span>${obj.likes}</span></p>
+            <p class="info-item"><b>Views</b><span>${obj.views}</span></p>
+            <p class="info-item"><b>Comments</b><span>${obj.comments}</span></p>
+            <p class="info-item"><b>Downloads</b><span>${obj.downloads}</span></p>
           </div>
         </div>`;
           });
