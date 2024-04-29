@@ -1,5 +1,4 @@
-const axios = require('axios').default;
-import Notiflix from 'notiflix/build/notiflix-notify-aio';
+import Notiflix from 'notiflix';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
@@ -12,6 +11,22 @@ const loadMore = document.querySelector('.load_more');
 const gallery = document.querySelector('.gallery');
 let page = 1;
 
+var lightbox = new SimpleLightbox('.gallery a', {
+  /* options */
+});
+
+function cardTemplate(obj) {
+  return `<div class="photo-card">
+              <a href="${obj.largeImageURL}"><img src="${obj.webformatURL}" alt="${obj.tags}" title="User: ${obj.user}" loading="lazy" /></a>
+              <div class="info">
+                <p class="info-item"><b>Likes</b><span>${obj.likes}</span></p>
+                <p class="info-item"><b>Views</b><span>${obj.views}</span></p>
+                <p class="info-item"><b>Comments</b><span>${obj.comments}</span></p>
+                <p class="info-item"><b>Downloads</b><span>${obj.downloads}</span></p>
+              </div>
+            </div>`;
+}
+
 searchForm.addEventListener('submit', ev => {
   ev.preventDefault();
 
@@ -22,10 +37,9 @@ searchForm.addEventListener('submit', ev => {
     Notiflix.Notify.failure('Type some words in search box ;)');
   } else {
     searchPhrase(input.value)
-      .then(response => response.json())
+      .then(response => response.data)
       .then(result => {
         const arrayOfHits = result.hits;
-        console.log(arrayOfHits);
         if (arrayOfHits.length === 0) {
           Notiflix.Notify.failure(
             'Sorry, there are no images matching your search query. Please try again.'
@@ -34,26 +48,25 @@ searchForm.addEventListener('submit', ev => {
           Notiflix.Notify.success(
             `Hooray! We found ${result.totalHits} images.`
           );
-          const arrayOfCards = arrayOfHits.map(obj => {
-            return `<div class="photo-card">
-          <a href="${obj.largeImageURL}"><img src="${obj.webformatURL}" alt="${obj.tags}" title="User: ${obj.user}" loading="lazy" /></a>
-          <div class="info">
-            <p class="info-item"><b>Likes</b><span>${obj.likes}</span></p>
-            <p class="info-item"><b>Views</b><span>${obj.views}</span></p>
-            <p class="info-item"><b>Comments</b><span>${obj.comments}</span></p>
-            <p class="info-item"><b>Downloads</b><span>${obj.downloads}</span></p>
-          </div>
-        </div>`;
+          const arrayOfCards = arrayOfHits.map(arrObj => {
+            return cardTemplate(arrObj);
           });
           gallery.innerHTML = arrayOfCards.join('');
-          loadMore.removeAttribute('hidden');
+          result.totalHits < 40
+            ? loadMore.setAttribute('hidden', '')
+            : loadMore.removeAttribute('hidden');
           page = 1;
         }
-        var lightbox = new SimpleLightbox('.gallery a', {
-          /* options */
-        });
+        lightbox.refresh();
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        Notiflix.Report.failure(
+          'Failure',
+          '"We cant reach the server."<br/><br/>- Try again later',
+          'Okay'
+        );
+        console.log(error);
+      });
   }
 });
 
@@ -63,34 +76,39 @@ loadMore.addEventListener('click', ev => {
     Notiflix.Notify.failure('Type some words in search box ;)');
   } else {
     searchPhrase(inputForm.value, page)
-      .then(response => response.json())
+      .then(response => response.data)
       .then(result => {
         const arrayOfHits = result.hits;
-        console.log(arrayOfHits);
+
         if (arrayOfHits.length === 0) {
           Notiflix.Notify.failure(
             'Sorry, there are no images matching your search query. Please try again.'
           );
         } else {
-          Notiflix.Notify.success(
-            `Hooray! We found ${result.totalHits} images.`
-          );
-          arrayOfHits.map(obj => {
-            gallery.innerHTML += `<div class="photo-card">
-          <a href="${obj.largeImageURL}"><img src="${obj.webformatURL}" alt="${obj.tags}" title="User:${obj.user}" loading="lazy" /></a>
-          <div class="info">
-            <p class="info-item"><b>Likes</b><span>${obj.likes}</span></p>
-            <p class="info-item"><b>Views</b><span>${obj.views}</span></p>
-            <p class="info-item"><b>Comments</b><span>${obj.comments}</span></p>
-            <p class="info-item"><b>Downloads</b><span>${obj.downloads}</span></p>
-          </div>
-        </div>`;
+          if (Math.ceil(result.totalHits / 40) === page) {
+            Notiflix.Notify.failure(
+              "We're sorry, but you've reached the end of search results."
+            );
+            loadMore.setAttribute('hidden', '');
+          } else {
+            Notiflix.Notify.success(
+              `Hooray! We found ${result.totalHits} images.`
+            );
+          }
+
+          arrayOfHits.map(arrObj => {
+            gallery.innerHTML += cardTemplate(arrObj);
           });
         }
-        var lightbox = new SimpleLightbox('.gallery a', {
-          /* options */
-        });
+        lightbox.refresh();
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        Notiflix.Report.failure(
+          'Failure',
+          '"We cant reach the server."<br/><br/>- Try again later',
+          'Okay'
+        );
+        console.log(error);
+      });
   }
 });
