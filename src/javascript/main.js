@@ -47,6 +47,7 @@ searchForm.addEventListener('submit', ev => {
           });
           gallery.innerHTML = arrayOfCards.join('');
           loadMore.removeAttribute('hidden');
+          page = 1;
         }
         var lightbox = new SimpleLightbox('.gallery a', {
           /* options */
