@@ -109,6 +109,10 @@ loadMore.addEventListener('click', ev => {
           'Okay'
         );
         console.log(error);
+      })
+      .finally(() => {
+        const height = document.body.scrollHeight;
+        window.scrollTo({ top: height, behavior: 'smooth' });
       });
   }
 });

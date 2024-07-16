@@ -8,7 +8,7 @@ export async function searchPhrase(text, pageIndex) {
     orientation: 'horizontal',
     safesearch: false,
     page: pageIndex,
-    per_page: 40,
+    per_page: 20,
   });
   return await axios.get(`https://pixabay.com/api/?${searchParams}`);
 }
