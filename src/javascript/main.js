@@ -46,7 +46,7 @@ searchForm.addEventListener('submit', ev => {
           );
         } else {
           Notiflix.Notify.success(
-            `Hooray! We found ${result.totalHits} images.`
+            `Hooray! We found ${result.totalHits} images in total.`
           );
           const arrayOfCards = arrayOfHits.map(arrObj => {
             return cardTemplate(arrObj);
@@ -92,7 +92,7 @@ loadMore.addEventListener('click', ev => {
             loadMore.setAttribute('hidden', '');
           } else {
             Notiflix.Notify.success(
-              `Hooray! We found ${result.totalHits} images.`
+              `Hooray! We found ${result.totalHits} images in total.`
             );
           }
 
